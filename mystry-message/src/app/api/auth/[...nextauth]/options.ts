@@ -3,7 +3,6 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/model/User";
-import { use } from "react";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -16,12 +15,13 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials: any): Promise<any> {
         await dbConnect();
+        
 
         try {
           const user = await UserModel.findOne({
             $or: [
-              { email: credentials.identifier },
-              { username: credentials.identifier },
+              { email: credentials.identifier.email },
+              { username: credentials.identifier.username },
             ],
           });
           if (!user) {
@@ -40,7 +40,7 @@ export const authOptions: NextAuthOptions = {
             throw new Error("Incorrect Password");
           }
         } catch (error: any) {
-          throw new Error(error);
+           throw new Error(error.message || "Authentication failed");
         }
       },
     }),

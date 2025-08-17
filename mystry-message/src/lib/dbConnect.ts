@@ -7,6 +7,9 @@ type ConnectionObject={
 const  connection : ConnectionObject={}
 
 async function dbConnect():Promise<void> {
+    console.log("NEXTAUTH_URL =>", process.env.NEXTAUTH_URL);
+console.log("NEXTAUTH_SECRET =>", process.env.NEXTAUTH_SECRET);
+
     if(connection.isConnected){
         console.log("Already connected to database");
         return
